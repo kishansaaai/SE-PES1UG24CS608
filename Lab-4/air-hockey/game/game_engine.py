@@ -9,6 +9,7 @@ a goal is incomplete. That's what Tasks 2-4 fix/add.
 
 import math
 import random
+import time
 
 from game.puck import Puck
 from game.paddle import Paddle
@@ -20,10 +21,12 @@ PLAYER_SPEED = 6
 PUCK_RADIUS = 12
 PADDLE_RADIUS = 28
 INITIAL_PUCK_SPEED = 4.5
+MATCH_SECONDS = 30
 
 
 class GameEngine:
-    def __init__(self):
+    def __init__(self, clock=time.monotonic):
+        self._clock = clock          # injectable so the timer can be tested
         self.puck = Puck(WIDTH / 2, HEIGHT / 2, PUCK_RADIUS)
         self._launch_puck()
 
@@ -41,6 +44,9 @@ class GameEngine:
 
         self.player_score = 0
         self.computer_score = 0
+        self.game_over = False
+        self.result = ""
+        self._start_time = self._clock()
 
     def _launch_puck(self):
         angle_choices = [0.3, 0.6, -0.3, -0.6]
@@ -49,8 +55,32 @@ class GameEngine:
         self.puck.vx = INITIAL_PUCK_SPEED * direction
         self.puck.vy = INITIAL_PUCK_SPEED * vy_factor
 
+    def restart(self):
+        """Start a brand-new match (bound to the R key)."""
+        self.__init__(self._clock)
+
+    def time_left(self):
+        if self.game_over:
+            return 0
+        return max(0.0, MATCH_SECONDS - (self._clock() - self._start_time))
+
+    def _end_match(self):
+        self.game_over = True
+        self.puck.vx = self.puck.vy = 0.0
+        if self.player_score > self.computer_score:
+            self.result = "YOU WIN!"
+        elif self.computer_score > self.player_score:
+            self.result = "COMPUTER WINS!"
+        else:
+            self.result = "DRAW"
+
     def handle_input(self, keys_pressed):
         import pygame
+        if keys_pressed[pygame.K_r]:
+            self.restart()
+            return
+        if self.game_over:
+            return
         dx = dy = 0
         if keys_pressed[pygame.K_UP]:
             dy -= PLAYER_SPEED
@@ -63,6 +93,12 @@ class GameEngine:
         self.player.move_by(dx, dy)
 
     def update(self):
+        if self.game_over:
+            return
+        if self.time_left() <= 0:
+            self._end_match()
+            return
+
         self.computer.vx = self.computer.vy = 0.0
         self.ai.update(self.computer, self.puck)
 
@@ -124,3 +160,6 @@ class GameEngine:
         renderer.draw_puck(surface, self.puck)
         renderer.draw_text(surface, font, f"YOU {self.player_score}", (WIDTH // 4 - 40, 30))
         renderer.draw_text(surface, font, f"CPU {self.computer_score}", (3 * WIDTH // 4 - 40, 30))
+        renderer.draw_text(surface, font, f"{math.ceil(self.time_left()):02d}s", (WIDTH // 2 - 22, 30))
+        if self.game_over:
+            renderer.draw_banner(surface, font, f"{self.result}  -  press R to restart")
