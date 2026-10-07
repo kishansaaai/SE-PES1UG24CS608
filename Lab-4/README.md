@@ -1,124 +1,37 @@
-# Air Hockey Lab
+# Lab 4: Vibe Coding - Air Hockey
 
-This project is a single-topic Air Hockey game using **Pygame**. It
-introduces students to angle-based collision physics, scoring,
-round timing, and post-goal state reset, using a small, readable
-object-oriented codebase.
+**Student:** SAI KISHAN A
 
----
+**SRN:** PES1UG24CS608
 
-## What's Provided
+Original starter: [SETAPESU26/02_air_hockey](https://github.com/SETAPESU26/02_air_hockey).
 
-A working Air Hockey game with:
+## Submission files
 
-- A player paddle (blue, left side) moved with the arrow keys, and a
-  computer-controlled paddle on the right
-- A puck that bounces off the top and bottom walls and off both
-  paddles
-- Goals at the center of each end wall
+- [Before video](before.mp4): 10 seconds of the original game, without audio.
+- [After video](after.mp4): 10 seconds of corrected gameplay, including scoring, the countdown, and the final result, without audio.
+- [AI chat history](chat-history.pdf): the supplied PDF export of the AI conversation.
+- [Updated game code](air-hockey/).
 
-It has **one deliberate bug** and **three features** left for you to
-build. You are expected to **analyze**, **interact with an AI
-assistant**, and **complete/fix** the game to make it fully functional
-and more interesting.
+## Completed tasks
 
-### **Use an LLM (e.g. ChatGPT or Claude) as your debugging and pair-programming partner for this lab.**
+| Task | Result |
+| --- | --- |
+| 1. Puck-paddle collision | Reflects using the contact direction, resolves overlap, and uses small movement steps to handle fast shots. |
+| 2. Match scoring | Displays both scores and awards a point after the puck passes the goal line through the goal gap. |
+| 3. Match timer | Displays a 30-second countdown, stops play at zero, and shows the winner or a draw. |
+| 4. Reset after a goal | Returns the puck to the center and immediately serves it for the next point. |
 
----
+Each coding task has its own commit, following a separate starter-code commit. The recordings and chat export are included in a submission commit.
 
-## Getting Started
+## Run the game
 
-### Setup
+Requires Python 3.10 or later. From the repository root:
 
-1. Make sure you have Python 3.10+ installed.
-2. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-3. Run the game:
-
-```bash
+```sh
+cd Lab-4/air-hockey
+python -m pip install -r requirements.txt
 python main.py
 ```
 
-**Controls:** Arrow keys move your paddle (blue, left side) within
-your own half of the table. Press R at any time to restart.
-
----
-
-## Tasks to Complete
-
-Each task must be completed using an iterative process involving LLM
-suggestions and your critical code review.
-
-### Task 1: Fix puck–paddle collision
-
-> The puck does not consistently respond correctly when it collides
-> with a paddle, particularly at higher speeds or when it approaches
-> at an angle. Fix the collision logic so the puck reliably rebounds
-> from the paddles at different speeds and angles without passing
-> through or getting stuck inside them.
-
-### Task 2: Implement match scoring
-
-> Add a scoring system where a player earns a point when the puck
-> enters the opponent's goal. Display both players' scores during
-> play, and determine the winner based on the final score.
-
-### Task 3: Implement a 30-second match timer
-
-> Add a 30-second countdown timer to the match. Display the remaining
-> time during gameplay. When the timer reaches zero, stop the match
-> and determine the result based on the scores. If both scores are
-> equal, display a draw.
-
-### Task 4: Implement puck reset after scoring
-
-> After a goal is scored, reset the puck to the center of the table
-> and prepare it for the next point. Make sure the puck's velocity,
-> direction, and any other relevant state are correctly reset so each
-> new point starts cleanly.
-
----
-
-## Expected Behavior
-
-- The puck bounces realistically off walls and paddles at any angle,
-  and never gets stuck vibrating inside a paddle.
-- A point is scored only when the puck fully passes through the goal
-  gap - hitting the wall elsewhere bounces the puck back normally.
-- After every goal, the puck immediately continues play from the
-  center - it should never sit motionless.
-- The match runs for exactly 30 seconds. When time runs out, the
-  match ends and shows the correct winner - or "Draw" if the score is
-  tied.
-
----
-
-## Folder Structure
-
-```
-air-hockey/
-├── main.py
-├── requirements.txt
-├── game/
-│   ├── game_engine.py
-│   ├── puck.py
-│   ├── paddle.py
-│   ├── collisions.py
-│   ├── ai.py
-│   └── renderer.py
-└── README.md
-```
-
----
-
-## Submission Checklist
-
-Submission is only the following three things:
-
-- [ ] A 10-second video of gameplay **before** your changes, showing the bug/broken behavior
-- [ ] A 10-second video of gameplay **after** your changes, showing the bug fixed and the new features working
-- [ ] The Chat/LLM used page link, with the complete chat history
+Use the arrow keys to move the blue paddle on the left. Press **R** to restart the match. Close the game window to exit.
