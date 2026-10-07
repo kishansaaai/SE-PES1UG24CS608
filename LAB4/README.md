@@ -29,7 +29,7 @@ Each coding task has its own commit, following a separate starter-code commit. T
 Requires Python 3.10 or later. From the repository root:
 
 ```sh
-cd Lab-4/air-hockey
+cd LAB4/air-hockey
 python -m pip install -r requirements.txt
 python main.py
 ```
