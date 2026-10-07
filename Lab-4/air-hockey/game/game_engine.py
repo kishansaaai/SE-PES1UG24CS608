@@ -48,9 +48,10 @@ class GameEngine:
         self.result = ""
         self._start_time = self._clock()
 
-    def _launch_puck(self):
+    def _launch_puck(self, direction=None):
         angle_choices = [0.3, 0.6, -0.3, -0.6]
-        direction = random.choice([-1, 1])
+        if direction is None:
+            direction = random.choice([-1, 1])
         vy_factor = random.choice(angle_choices)
         self.puck.vx = INITIAL_PUCK_SPEED * direction
         self.puck.vy = INITIAL_PUCK_SPEED * vy_factor
@@ -134,7 +135,7 @@ class GameEngine:
             if in_gap:
                 if p.x + p.radius < MARGIN:              # fully past the line
                     self.computer_score += 1             # went into player's goal
-                    self._reset_puck()
+                    self._reset_puck(serve_direction=-1)
             else:
                 p.x = MARGIN + p.radius
                 p.vx = -p.vx
@@ -142,15 +143,22 @@ class GameEngine:
             if in_gap:
                 if p.x - p.radius > WIDTH - MARGIN:      # fully past the line
                     self.player_score += 1               # went into computer's goal
-                    self._reset_puck()
+                    self._reset_puck(serve_direction=1)
             else:
                 p.x = WIDTH - MARGIN - p.radius
                 p.vx = -p.vx
 
-    def _reset_puck(self):
+    def _reset_puck(self, serve_direction=None):
+        """Put the puck back at centre and serve it straight away, toward
+        whoever just conceded (-1 = left/player, +1 = right/computer)."""
         self.puck.x, self.puck.y = WIDTH / 2, HEIGHT / 2
-        self.puck.vx = 0
-        self.puck.vy = 0
+        self._launch_puck(serve_direction)
+        # Fresh start for the paddles / AI too.
+        for paddle, x in ((self.player, WIDTH * 0.15), (self.computer, WIDTH * 0.85)):
+            paddle.x, paddle.y = x, HEIGHT / 2
+            paddle.vx = paddle.vy = 0.0
+        self.ai._target_y = None
+        self.ai._delay_counter = 0
 
     def draw(self, surface, font):
         from game import renderer
