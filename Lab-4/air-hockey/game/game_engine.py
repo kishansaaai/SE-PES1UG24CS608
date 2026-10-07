@@ -39,6 +39,9 @@ class GameEngine:
         )
         self.ai = ComputerAI()
 
+        self.player_score = 0
+        self.computer_score = 0
+
     def _launch_puck(self):
         angle_choices = [0.3, 0.6, -0.3, -0.6]
         direction = random.choice([-1, 1])
@@ -86,18 +89,27 @@ class GameEngine:
         return (lo_x, hi_x, MARGIN + r, HEIGHT - MARGIN - r)
 
     def _handle_goals(self):
-        if self.puck.x - self.puck.radius < MARGIN:
-            if GOAL_TOP < self.puck.y < GOAL_BOTTOM:
-                self._reset_puck()
+        """A goal counts only when the puck is in the goal gap AND has fully
+        crossed the end line. Anywhere else the end wall bounces it back."""
+        p = self.puck
+        in_gap = GOAL_TOP < p.y < GOAL_BOTTOM
+
+        if p.x - p.radius < MARGIN:                      # touching left wall
+            if in_gap:
+                if p.x + p.radius < MARGIN:              # fully past the line
+                    self.computer_score += 1             # went into player's goal
+                    self._reset_puck()
             else:
-                self.puck.x = MARGIN + self.puck.radius
-                self.puck.vx = -self.puck.vx
-        elif self.puck.x + self.puck.radius > WIDTH - MARGIN:
-            if GOAL_TOP < self.puck.y < GOAL_BOTTOM:
-                self._reset_puck()
+                p.x = MARGIN + p.radius
+                p.vx = -p.vx
+        elif p.x + p.radius > WIDTH - MARGIN:            # touching right wall
+            if in_gap:
+                if p.x - p.radius > WIDTH - MARGIN:      # fully past the line
+                    self.player_score += 1               # went into computer's goal
+                    self._reset_puck()
             else:
-                self.puck.x = WIDTH - MARGIN - self.puck.radius
-                self.puck.vx = -self.puck.vx
+                p.x = WIDTH - MARGIN - p.radius
+                p.vx = -p.vx
 
     def _reset_puck(self):
         self.puck.x, self.puck.y = WIDTH / 2, HEIGHT / 2
@@ -110,3 +122,5 @@ class GameEngine:
         renderer.draw_paddle(surface, self.player, renderer.COLOR_PLAYER)
         renderer.draw_paddle(surface, self.computer, renderer.COLOR_COMPUTER)
         renderer.draw_puck(surface, self.puck)
+        renderer.draw_text(surface, font, f"YOU {self.player_score}", (WIDTH // 4 - 40, 30))
+        renderer.draw_text(surface, font, f"CPU {self.computer_score}", (3 * WIDTH // 4 - 40, 30))
