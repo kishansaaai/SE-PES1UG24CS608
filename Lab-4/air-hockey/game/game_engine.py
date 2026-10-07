@@ -7,6 +7,7 @@ there is no scoring, no match timer, and the reset that happens after
 a goal is incomplete. That's what Tasks 2-4 fix/add.
 """
 
+import math
 import random
 
 from game.puck import Puck
@@ -59,15 +60,30 @@ class GameEngine:
         self.player.move_by(dx, dy)
 
     def update(self):
+        self.computer.vx = self.computer.vy = 0.0
         self.ai.update(self.computer, self.puck)
 
-        self.puck.move()
-        self.puck.bounce_off_walls(HEIGHT, MARGIN)
+        # Sub-step the puck so fast shots can't tunnel through a paddle.
+        speed = math.hypot(self.puck.vx, self.puck.vy)
+        steps = max(1, math.ceil(speed / (self.puck.radius * 0.5)))
+        for _ in range(steps):
+            self.puck.x += self.puck.vx / steps
+            self.puck.y += self.puck.vy / steps
+            self.puck.bounce_off_walls(HEIGHT, MARGIN)
+            bounds = self._puck_bounds()
+            handle_paddle_collision(self.puck, self.player, bounds)
+            handle_paddle_collision(self.puck, self.computer, bounds)
+            self._handle_goals()
 
-        handle_paddle_collision(self.puck, self.player)
-        handle_paddle_collision(self.puck, self.computer)
-
-        self._handle_goals()
+    def _puck_bounds(self):
+        """Area the puck's centre may occupy. The end walls don't apply in
+        the goal gap, so the puck may travel into a goal there."""
+        r = self.puck.radius
+        if GOAL_TOP < self.puck.y < GOAL_BOTTOM:
+            lo_x, hi_x = -1e9, 1e9
+        else:
+            lo_x, hi_x = MARGIN + r, WIDTH - MARGIN - r
+        return (lo_x, hi_x, MARGIN + r, HEIGHT - MARGIN - r)
 
     def _handle_goals(self):
         if self.puck.x - self.puck.radius < MARGIN:
