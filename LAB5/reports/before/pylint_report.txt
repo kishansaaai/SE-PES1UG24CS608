@@ -1,0 +1,25 @@
+************* Module pos_system
+pos_system.py:1:0: C0114: Missing module docstring (missing-module-docstring)
+pos_system.py:7:0: C0103: Constant name "sales_total" doesn't conform to UPPER_CASE naming style (invalid-name)
+pos_system.py:10:0: C0116: Missing function or method docstring (missing-function-docstring)
+pos_system.py:10:0: W0102: Dangerous default value [] as argument (dangerous-default-value)
+pos_system.py:11:4: W0603: Using the global statement (global-statement)
+pos_system.py:16:8: W0702: No exception type(s) specified (bare-except)
+pos_system.py:21:25: C0209: Formatting a regular string which could be an f-string (consider-using-f-string)
+pos_system.py:24:0: C0116: Missing function or method docstring (missing-function-docstring)
+pos_system.py:27:11: W0123: Use of eval (eval-used)
+pos_system.py:26:4: W0612: Unused variable 'total' (unused-variable)
+pos_system.py:29:0: C0116: Missing function or method docstring (missing-function-docstring)
+pos_system.py:33:11: W0718: Catching too general exception Exception (broad-exception-caught)
+pos_system.py:36:0: C0116: Missing function or method docstring (missing-function-docstring)
+pos_system.py:37:8: W1514: Using open without explicitly specifying an encoding (unspecified-encoding)
+pos_system.py:37:8: R1732: Consider using 'with' for resource-allocating operations (consider-using-with)
+pos_system.py:41:0: C0116: Missing function or method docstring (missing-function-docstring)
+pos_system.py:41:0: C0103: Function name "printSales" doesn't conform to snake_case naming style (invalid-name)
+pos_system.py:44:0: C0116: Missing function or method docstring (missing-function-docstring)
+pos_system.py:1:0: W0611: Unused import json (unused-import)
+pos_system.py:3:0: W0611: Unused import logging (unused-import)
+
+-----------------------------------
+Your code has been rated at 5.65/10
+

@@ -1,0 +1,7 @@
+************* Module pos_system
+pos_system.py:7:0: C0103: Constant name "sales_total" doesn't conform to UPPER_CASE naming style (invalid-name)
+pos_system.py:13:4: W0603: Using the global statement (global-statement)
+
+-----------------------------------
+Your code has been rated at 9.62/10
+

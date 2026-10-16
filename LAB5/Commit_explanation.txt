@@ -1,0 +1,52 @@
+Explanation of the three commits
+
+Commit 1: Security fixes with Bandit
+Commit ID: 2b38adb
+
+The first commit deals with the three problems reported by Bandit. The
+main concern was eval in the discount function. It could run Python code
+entered at the prompt, even though the program only needed a discount
+calculation. I replaced it with a check that accepts the documented
+multiplication and subtraction forms, then calculates the result directly.
+
+I also replaced the random receipt number generator with secrets while
+keeping the same four digit format. In the stock function, I changed the
+broad exception handler to catch KeyError and show the unknown product.
+Previously, that error was silently ignored.
+
+This commit also saves the original reports from all three tools so the
+starting problems can be compared with the final results.
+
+Commit 2: Code quality fixes with Pylint
+Commit ID: 0e39c7b
+
+The second commit fixes several Pylint findings while keeping the original
+functions. The receipt list used an empty list as its default value, so
+the same list could be reused across calls. I changed the default to None
+and created a fresh list inside the function when needed.
+
+I replaced the bare checkout exception with KeyError, TypeError and
+IndexError. This keeps the original handling of invalid cart entries
+without catching every possible error. I also changed receipt saving to
+use a with statement, so the file closes properly, and specified UTF8
+encoding.
+
+The remaining cleanup removes unused imports, adds short descriptions,
+renames printSales to print_sales and updates the receipt string format.
+The Pylint score reached 9.62 out of 10, above the required 9.5. Two
+messages remain about the original global sales variable and the global
+statement.
+
+Commit 3: Formatting fixes with Flake8 and final reports
+Commit ID: 3a4dbc3
+
+The third commit handles the remaining formatting problems. I added the
+required blank lines between functions, wrapped long expressions and
+shortened one long description. These changes make the file follow the
+formatting rules without changing its calculations.
+
+I then saved the final reports and added issues.md, which lists the
+original problems and explains how each one was addressed. The final
+results are Pylint 9.62 out of 10, no Bandit findings and no Flake8
+messages. The empty Flake8 report is the expected output when there are
+no formatting issues.

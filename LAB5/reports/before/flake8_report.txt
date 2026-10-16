@@ -1,0 +1,12 @@
+pos_system.py:1:1: F401 'json' imported but unused
+pos_system.py:3:1: F401 'logging' imported but unused
+pos_system.py:10:1: E302 expected 2 blank lines, found 1
+pos_system.py:16:9: E722 do not use bare 'except'
+pos_system.py:21:80: E501 line too long (88 > 79 characters)
+pos_system.py:24:1: E302 expected 2 blank lines, found 1
+pos_system.py:26:5: F841 local variable 'total' is assigned to but never used
+pos_system.py:29:1: E302 expected 2 blank lines, found 1
+pos_system.py:36:1: E302 expected 2 blank lines, found 1
+pos_system.py:41:1: E302 expected 2 blank lines, found 1
+pos_system.py:44:1: E302 expected 2 blank lines, found 1
+pos_system.py:56:1: E305 expected 2 blank lines after class or function definition, found 1
